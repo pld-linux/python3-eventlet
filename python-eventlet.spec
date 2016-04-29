@@ -9,7 +9,7 @@ Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
 Version:	0.18.4
-Release:	1
+Release:	2
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.python.org/simple/eventlet/
@@ -100,6 +100,9 @@ interpretera Pythona lub jako małej części dużej aplikacji.
 Summary:	API documentation for eventlet module
 Summary(pl.UTF-8):	Dokumentacja API modułu eventlet
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description apidocs
 API documentation for eventlet module.

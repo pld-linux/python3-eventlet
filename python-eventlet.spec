@@ -1,20 +1,21 @@
 #
 # Conditional build:
 %bcond_without	doc		# Sphinx documentation
-%bcond_with	tests		# test target [few tests fail as of 0.18.4]
+%bcond_without	tests		# unit tests
 %bcond_without	python2		# CPython 2.x module
 %bcond_without	python3		# CPython 3.x module
 
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
-Version:	0.18.4
-Release:	3
+Version:	0.21.0
+Release:	1
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.python.org/simple/eventlet/
-Source0:	https://pypi.python.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	8d1c646d8cc10a4958c92fe8a30f3676
+Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
+# Source0-md5:	92aaac4c0abaddff9329f55d8f5bcd76
+Patch0:		%{name}-deps.patch
 URL:		https://pypi.python.org/pypi/eventlet/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
@@ -22,25 +23,23 @@ BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	python-devel >= 1:2.6
 BuildRequires:	python-setuptools >= 5.4.1
 %if %{with tests}
-BuildRequires:	python-dns >= 1.10
+BuildRequires:	python-enum34
 BuildRequires:	python-greenlet >= 0.3
 BuildRequires:	python-nose >= 1.3.1
-BuildRequires:	python-pyOpenSSL
 %endif
 %endif
 %if %{with python3}
 BuildRequires:	python3-devel >= 1:3.3
 BuildRequires:	python3-setuptools >= 5.4.1
 %if %{with tests}
-BuildRequires:	python3-dns >= 1.10
+%if "%{py3_ver}" < "3.4"
+BuildRequires:	python3-enum34
+%endif
 BuildRequires:	python3-greenlet >= 0.3
 BuildRequires:	python3-nose >= 1.3.1
-BuildRequires:	python3-pyOpenSSL
 %endif
 %endif
 %{?with_doc:BuildRequires:	sphinx-pdg}
-Requires:	python-dns >= 1.10
-Requires:	python-greenlet >= 0.3
 Requires:	python-modules >= 1:2.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -70,8 +69,6 @@ interpretera Pythona lub jako małej części dużej aplikacji.
 Summary:	Highly concurrent networking library for Python 3
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 3
 Group:		Development/Languages/Python
-Requires:	python3-dns >= 1.10
-Requires:	python3-greenlet >= 0.3
 Requires:	python3-modules >= 1:3.3
 
 %description -n python3-eventlet
@@ -112,14 +109,19 @@ Dokumentacja API modułu eventlet.
 
 %prep
 %setup -q -n eventlet-%{version}
+%patch0 -p1
 
 %build
 %if %{with python2}
-%py_build %{?with_tests:test}
+%py_build
+
+%{?with_tests:PYTHONPATH=$(pwd) %{__python} -m unittest tests}
 %endif
 
 %if %{with python3}
-%py3_build %{?with_tests:test}
+%py3_build
+
+%{?with_tests:PYTHONPATH=$(pwd) %{__python3} -m unittest tests}
 %endif
 
 %if %{with doc}

@@ -1,0 +1,31 @@
+--- eventlet-0.21.0/setup.py.orig	2017-04-06 00:33:03.000000000 +0200
++++ eventlet-0.21.0/setup.py	2017-04-17 09:47:43.234992968 +0200
+@@ -1,11 +1,16 @@
+ #!/usr/bin/env python
+ import os
+ import setuptools
++import sys
+ 
+ 
+ os.environ.setdefault('EVENTLET_IMPORT_VERSION_ONLY', '1')
+ import eventlet
+ 
++required = ["greenlet >= 0.3"]
++if (sys.version_info.major, sys.version_info.minor) < (3, 4):
++    required.append("enum34")
++
+ setuptools.setup(
+     name='eventlet',
+     version=eventlet.__version__,
+@@ -14,10 +19,7 @@
+     author_email='eventletdev@lists.secondlife.com',
+     url='http://eventlet.net',
+     packages=setuptools.find_packages(exclude=['benchmarks', 'tests', 'tests.*']),
+-    install_requires=(
+-        'enum-compat',
+-        'greenlet >= 0.3',
+-    ),
++    install_requires=required,
+     zip_safe=False,
+     long_description=open(
+         os.path.join(

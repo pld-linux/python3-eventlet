@@ -8,17 +8,17 @@
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
-Version:	0.21.0
-Release:	2
+Version:	0.23.0
+Release:	1
 License:	MIT
 Group:		Development/Languages/Python
-#Source0Download: https://pypi.python.org/simple/eventlet/
+#Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	92aaac4c0abaddff9329f55d8f5bcd76
-Patch0:		%{name}-deps.patch
-URL:		https://pypi.python.org/pypi/eventlet/
+# Source0-md5:	9b459a4d3b1365febd0d22cf71b9e7ce
+URL:		https://pypi.org/project/eventlet/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	sed >= 4.0
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.6
 BuildRequires:	python-setuptools >= 5.4.1
@@ -109,7 +109,6 @@ Dokumentacja API modułu eventlet.
 
 %prep
 %setup -q -n eventlet-%{version}
-%patch0 -p1
 
 %build
 %if %{with python2}
@@ -126,7 +125,6 @@ Dokumentacja API modułu eventlet.
 
 %if %{with doc}
 %{__make} -C doc -j1 html
-%{__rm} -r doc/_build/html/_sources
 %endifg
 
 %install
@@ -140,6 +138,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with python3}
 %py3_install
+
+%if "%{py3_ver}" >= "3.4"
+%{__sed} -i -e '/^\[:python_version *< *"3\.4"]/,$ d' $RPM_BUILD_ROOT%{py3_sitescriptdir}/eventlet-%{version}-py*.egg-info/requires.txt
 %endif
 
 %clean
@@ -164,5 +165,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %files apidocs
 %defattr(644,root,root,755)
-%doc doc/_build/html/*
+%doc doc/_build/html/{_images,_static,modules,*.html,*.js}
 %endif

@@ -1,8 +1,8 @@
-# TODO: fix tests
+# TODO: fix green.ssl on Python 3.7
 #
 # Conditional build:
 %bcond_without	doc		# Sphinx documentation
-%bcond_with	tests		# unit tests (some failures as of 0.23.0)
+%bcond_with	tests		# unit tests [failures with python3.7: green.ssl is broken there, as of 0.23.0]
 %bcond_without	python2		# CPython 2.x module
 %bcond_without	python3		# CPython 3.x module
 
@@ -41,6 +41,10 @@ BuildRequires:	python3-nose >= 1.3.1
 %endif
 %endif
 %{?with_doc:BuildRequires:	sphinx-pdg}
+%if %{with tests}
+# SO_REUSEPORT option for tests.convenience_test.test_socket_reuse
+BuildRequires:	uname(release) >= 3.9
+%endif
 Requires:	python-modules >= 1:2.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -118,7 +122,7 @@ Dokumentacja API modułu eventlet.
 %if %{with tests}
 PYTHONPATH=$(pwd) \
 nosetests-%{py_ver} tests
-%edif
+%endif
 %endif
 
 %if %{with python3}
@@ -127,7 +131,7 @@ nosetests-%{py_ver} tests
 %if %{with tests}
 PYTHONPATH=$(pwd) \
 nosetests-%{py3_ver} tests
-%edif
+%endif
 %endif
 
 %if %{with doc}

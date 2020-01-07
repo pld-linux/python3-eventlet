@@ -29,6 +29,7 @@ BuildRequires:	python-greenlet >= 0.3
 BuildRequires:	python-monotonic >= 1.4
 BuildRequires:	python-nose >= 1.3.1
 BuildRequires:	python-six >= 1.10.0
+BuildRequires:	python-subprocess32
 %endif
 %endif
 %if %{with python3}
@@ -103,7 +104,7 @@ interpretera Pythona lub jako małej części dużej aplikacji.
 Summary:	API documentation for eventlet module
 Summary(pl.UTF-8):	Dokumentacja API modułu eventlet
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
+%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
 %endif
 
@@ -116,6 +117,11 @@ Dokumentacja API modułu eventlet.
 %prep
 %setup -q -n eventlet-%{version}
 %patch0 -p1
+
+# uses network
+%{__rm} tests/greendns_test.py
+# requires local mysql
+%{__rm} tests/mysqldb_test.py
 
 %build
 %if %{with python2}

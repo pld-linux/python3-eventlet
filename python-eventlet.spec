@@ -1,43 +1,44 @@
-# TODO: fix green.ssl on Python 3.7
 #
 # Conditional build:
 %bcond_without	doc		# Sphinx documentation
-%bcond_with	tests		# unit tests [failures with python3.7: green.ssl is broken there, as of 0.23.0]
+%bcond_without	tests		# unit tests
 %bcond_without	python2		# CPython 2.x module
 %bcond_without	python3		# CPython 3.x module
 
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
-Version:	0.23.0
-Release:	4
+Version:	0.25.1
+Release:	1
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	9b459a4d3b1365febd0d22cf71b9e7ce
+# Source0-md5:	8d7145af6506d5418c5a6bee7bf0b7e7
+Patch0:		%{name}-monotonic.patch
 URL:		https://pypi.org/project/eventlet/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
-BuildRequires:	sed >= 4.0
 %if %{with python2}
-BuildRequires:	python-devel >= 1:2.6
-BuildRequires:	python-setuptools >= 5.4.1
+BuildRequires:	python-devel >= 1:2.7
+BuildRequires:	python-setuptools >= 1:5.4.1
 %if %{with tests}
+BuildRequires:	python-dns >= 1.15.0
 BuildRequires:	python-enum34
 BuildRequires:	python-greenlet >= 0.3
+BuildRequires:	python-monotonic >= 1.4
 BuildRequires:	python-nose >= 1.3.1
+BuildRequires:	python-six >= 1.10.0
 %endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 1:3.3
-BuildRequires:	python3-setuptools >= 5.4.1
+BuildRequires:	python3-devel >= 1:3.4
+BuildRequires:	python3-setuptools >= 1:5.4.1
 %if %{with tests}
-%if "%{py3_ver}" < "3.4"
-BuildRequires:	python3-enum34
-%endif
+BuildRequires:	python3-dns >= 1.15.0
 BuildRequires:	python3-greenlet >= 0.3
 BuildRequires:	python3-nose >= 1.3.1
+BuildRequires:	python3-six >= 1.10.0
 %endif
 %endif
 %{?with_doc:BuildRequires:	sphinx-pdg}
@@ -45,7 +46,7 @@ BuildRequires:	python3-nose >= 1.3.1
 # SO_REUSEPORT option for tests.convenience_test.test_socket_reuse
 BuildRequires:	uname(release) >= 3.9
 %endif
-Requires:	python-modules >= 1:2.6
+Requires:	python-modules >= 1:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -74,7 +75,7 @@ interpretera Pythona lub jako małej części dużej aplikacji.
 Summary:	Highly concurrent networking library for Python 3
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 3
 Group:		Development/Languages/Python
-Requires:	python3-modules >= 1:3.3
+Requires:	python3-modules >= 1:3.4
 
 %description -n python3-eventlet
 Eventlet is a concurrent networking library for Python that allows you
@@ -114,6 +115,7 @@ Dokumentacja API modułu eventlet.
 
 %prep
 %setup -q -n eventlet-%{version}
+%patch0 -p1
 
 %build
 %if %{with python2}
@@ -150,12 +152,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with python3}
 %py3_install
-
-%if "%{py3_ver}" >= "3.4"
-# don't require enum34 on python >= 3.4 (different forms depending on setuptools version)
-%{__sed} -i -e '/^\[:python_version *< *"3\.4"]/,$ d' \
-	-e '/^enum34;python_version<"3\.4"/d' $RPM_BUILD_ROOT%{py3_sitescriptdir}/eventlet-%{version}-py*.egg-info/requires.txt
-%endif
 %endif
 
 %clean

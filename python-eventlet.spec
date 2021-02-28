@@ -104,9 +104,7 @@ interpretera Pythona lub jako małej części dużej aplikacji.
 Summary:	API documentation for eventlet module
 Summary(pl.UTF-8):	Dokumentacja API modułu eventlet
 Group:		Documentation
-%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
-%endif
 
 %description apidocs
 API documentation for eventlet module.

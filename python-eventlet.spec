@@ -9,7 +9,7 @@ Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
 Version:	0.25.1
-Release:	1
+Release:	2
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
@@ -48,6 +48,7 @@ BuildRequires:	python3-six >= 1.10.0
 BuildRequires:	uname(release) >= 3.9
 %endif
 Requires:	python-modules >= 1:2.7
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description

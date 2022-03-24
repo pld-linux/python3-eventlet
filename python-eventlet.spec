@@ -8,14 +8,13 @@
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
-Version:	0.25.1
-Release:	2
+Version:	0.33.0
+Release:	1
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	8d7145af6506d5418c5a6bee7bf0b7e7
-Patch0:		%{name}-monotonic.patch
+# Source0-md5:	a15ae1b585678c0bad0e89916d7c0ab4
 URL:		https://pypi.org/project/eventlet/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
@@ -33,7 +32,7 @@ BuildRequires:	python-subprocess32
 %endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 1:3.4
+BuildRequires:	python3-devel >= 1:3.5
 BuildRequires:	python3-setuptools >= 1:5.4.1
 %if %{with tests}
 BuildRequires:	python3-dns >= 1.15.0
@@ -77,7 +76,7 @@ interpretera Pythona lub jako małej części dużej aplikacji.
 Summary:	Highly concurrent networking library for Python 3
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 3
 Group:		Development/Languages/Python
-Requires:	python3-modules >= 1:3.4
+Requires:	python3-modules >= 1:3.5
 
 %description -n python3-eventlet
 Eventlet is a concurrent networking library for Python that allows you
@@ -115,7 +114,6 @@ Dokumentacja API modułu eventlet.
 
 %prep
 %setup -q -n eventlet-%{version}
-%patch0 -p1
 
 # uses network
 %{__rm} tests/greendns_test.py

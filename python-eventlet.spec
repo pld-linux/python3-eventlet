@@ -8,13 +8,13 @@
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python-eventlet
-Version:	0.33.0
-Release:	4
+Version:	0.33.1
+Release:	1
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	a15ae1b585678c0bad0e89916d7c0ab4
+# Source0-md5:	538c969ce38b7e8dc09e789adb1aec33
 URL:		https://pypi.org/project/eventlet/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
@@ -41,7 +41,11 @@ BuildRequires:	python3-nose >= 1.3.1
 BuildRequires:	python3-six >= 1.10.0
 %endif
 %endif
-%{?with_doc:BuildRequires:	sphinx-pdg}
+%if %{with doc}
+BuildRequires:	python3-dns >= 1.15.0
+BuildRequires:	python3-greenlet >= 0.3
+BuildRequires:	sphinx-pdg >= 2
+%endif
 %if %{with tests}
 # SO_REUSEPORT option for tests.convenience_test.test_socket_reuse
 BuildRequires:	uname(release) >= 3.9

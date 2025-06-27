@@ -1,40 +1,41 @@
 #
 # Conditional build:
 %bcond_without	doc		# Sphinx documentation
-%bcond_with	tests		# unit tests (random timeouts on builders)
+%bcond_with	tests		# unit tests (requires localhost networking)
 
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python3-eventlet
-Version:	0.39.1
+Version:	0.40.1
 Release:	1
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	00206ce34e033f9a8167270c29c4b24d
+# Source0-md5:	871eaf342f49e153ed75d489a1e4e1c5
 URL:		https://pypi.org/project/eventlet/
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
-BuildRequires:	python3-devel >= 1:3.5
+BuildRequires:	python3-devel >= 1:3.9
 BuildRequires:	python3-build
+BuildRequires:	python3-hatch-vcs >= 0.3
+BuildRequires:	python3-hatchling >= 1.12.2
 BuildRequires:	python3-installer
 %if %{with tests}
 BuildRequires:	python3-dns >= 1.15.0
-BuildRequires:	python3-greenlet >= 0.3
-BuildRequires:	python3-nose >= 1.3.1
-BuildRequires:	python3-six >= 1.10.0
+BuildRequires:	python3-greenlet >= 1.0
 %endif
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with doc}
 BuildRequires:	python3-dns >= 1.15.0
-BuildRequires:	python3-greenlet >= 0.3
-BuildRequires:	sphinx-pdg >= 2
+BuildRequires:	python3-greenlet >= 1.0
+BuildRequires:	python3-sphinxcontrib-apidoc >= 0.2.0
+BuildRequires:	sphinx-pdg-3 >= 2
 %endif
 %if %{with tests}
 # SO_REUSEPORT option for tests.convenience_test.test_socket_reuse
 BuildRequires:	uname(release) >= 3.9
 %endif
-Requires:	python3-modules >= 1:2.7
+Requires:	python3-modules >= 1:3.9
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -84,10 +85,8 @@ Dokumentacja API modułu eventlet.
 %py3_build_pyproject
 
 %if %{with tests}
-#PYTHONPATH=$(pwd) \
-# use explicit plugins list for reliable builds (delete PYTEST_PLUGINS if empty)
+PYTHONPATH=$(pwd) \
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
-PYTEST_PLUGINS= \
 %{__python3} -m pytest tests
 %endif
 

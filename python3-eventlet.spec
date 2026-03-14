@@ -6,13 +6,14 @@
 Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python3-eventlet
-Version:	0.40.1
+Version:	0.40.4
 Release:	1
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
-# Source0-md5:	871eaf342f49e153ed75d489a1e4e1c5
+# Source0-md5:	42dfea2c67f3ac9b514e08f939266135
+Patch0:		eventlet-dns-no-doh.patch
 URL:		https://pypi.org/project/eventlet/
 BuildRequires:	python3-devel >= 1:3.9
 BuildRequires:	python3-build
@@ -75,6 +76,7 @@ Dokumentacja API modułu eventlet.
 
 %prep
 %setup -q -n eventlet-%{version}
+%patch -P0 -p1
 
 # uses network
 %{__rm} tests/greendns_test.py
@@ -92,7 +94,7 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 
 %if %{with doc}
 PYTHONPATH=$(pwd) \
-sphinx-build-3 -b html doc/source doc/source/_build/html
+sphinx-build-3 -b html doc/source doc/_build/html
 %endif
 
 %install
@@ -112,5 +114,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %files apidocs
 %defattr(644,root,root,755)
-%doc doc/source/_build/html/{_images,_static,modules,*.html,*.js}
+%doc doc/_build/html/{_images,_static,modules,*.html,*.js}
 %endif

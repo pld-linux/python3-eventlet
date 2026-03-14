@@ -1,0 +1,12 @@
+--- eventlet-0.40.4/eventlet/support/greendns.py.orig	2020-02-02 01:00:00.000000000 +0100
++++ eventlet-0.40.4/eventlet/support/greendns.py	2026-03-14 10:05:56.485851475 +0100
+@@ -61,6 +61,9 @@ def import_patched(module_name):
+ 
+ 
+ dns = import_patched('dns')
++# DNS doh relies on httpcore, which uses trio, incompatible with eventlet
++import dns._features as feat
++feat.force("doh", False)
+ 
+ # Handle rdtypes separately; we need fully it available as we patch the rest
+ dns.rdtypes = import_patched('dns.rdtypes')

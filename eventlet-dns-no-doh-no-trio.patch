@@ -1,0 +1,14 @@
+--- eventlet-0.41.3.orig/eventlet/support/greendns.py	2020-02-02 01:00:00.000000000 +0100
++++ eventlet-0.41.3/eventlet/support/greendns.py	2026-11-19 23:53:59.723838994 +0100
+@@ -61,6 +61,11 @@
+ 
+ 
+ dns = import_patched('dns')
++# DNS doh relies on httpcore, which uses trio, incompatible with eventlet
++import dns._features as feat
++feat.force("doh", False)
++# dnspython also imports trio (doq, asyncbackend) when installed; trio breaks on green sockets
++feat.force("trio", False)
+ 
+ # Handle rdtypes separately; we need fully it available as we patch the rest
+ dns.rdtypes = import_patched('dns.rdtypes')

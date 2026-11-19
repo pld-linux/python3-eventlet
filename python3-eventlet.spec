@@ -7,13 +7,13 @@ Summary:	Highly concurrent networking library for Python 2
 Summary(pl.UTF-8):	Biblioteka sieciowa o dużym stopniu zrównoleglenia dla Pythona 2
 Name:		python3-eventlet
 Version:	0.41.3
-Release:	1
+Release:	2
 License:	MIT
 Group:		Development/Languages/Python
 #Source0Download: https://pypi.org/simple/eventlet/
 Source0:	https://files.pythonhosted.org/packages/source/e/eventlet/eventlet-%{version}.tar.gz
 # Source0-md5:	60edb9e47398ec5fcb00f022a7729c26
-Patch0:		eventlet-dns-no-doh.patch
+Patch0:		eventlet-dns-no-doh-no-trio.patch
 URL:		https://pypi.org/project/eventlet/
 BuildRequires:	python3-devel >= 1:3.9
 BuildRequires:	python3-build
